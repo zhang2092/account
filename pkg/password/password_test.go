@@ -35,14 +35,12 @@ func TestScryptPassword(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, hashedPassword1)
 
-	b, err := ScryptComparePassword(hashedPassword1, password)
+	err = ScryptComparePassword(hashedPassword1, password)
 	require.NoError(t, err)
-	require.Equal(t, b, true)
 
 	wrongPassword := random.RandomString(6)
-	b, err = ScryptComparePassword(hashedPassword1, wrongPassword)
+	err = ScryptComparePassword(hashedPassword1, wrongPassword)
 	require.Error(t, err)
-	require.Equal(t, b, false)
 
 	hashedPassword2, err := ScryptHashPassword(password)
 	require.NoError(t, err)

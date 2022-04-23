@@ -37,26 +37,26 @@ func ScryptHashPassword(password string) (string, error) {
 // ScryptComparePassword 判断密码是否正确
 // storedPassword 加密密码
 // suppliedPassword 原始密码
-func ScryptComparePassword(storedPassword string, suppliedPassword string) (bool, error) {
+func ScryptComparePassword(storedPassword string, suppliedPassword string) error {
 	pwsalt := strings.Split(storedPassword, ".")
 
 	// check supplied password salted with hash
 	salt, err := hex.DecodeString(pwsalt[1])
 
 	if err != nil {
-		return false, fmt.Errorf("unable to verify user password")
+		return fmt.Errorf("unable to verify user password")
 	}
 
 	shash, err := scrypt.Key([]byte(suppliedPassword), salt, 32768, 8, 1, 32)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	if hex.EncodeToString(shash) == pwsalt[0] {
-		return true, nil
+		return nil
 	}
 
-	return false, fmt.Errorf("password error")
+	return fmt.Errorf("password error")
 }
 
 // ******************** bcrypt ********************
